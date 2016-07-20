@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:objc_runtime_hooker/objc_runtime_hooker.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "absolute:/Users/richardross/Documents/projects/mach_override_example/mach_override/mach_override.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:mach_override/../mach_override_test_app/mach_override_test_app.xcodeproj">
+   </FileRef>
+</Workspace>

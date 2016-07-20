@@ -1,0 +1,3 @@
+[submodule "mach_override/mach_override"]
+	path = mach_override/mach_override
+	url = git@github.com:richardjrossiii/mach_override.git
