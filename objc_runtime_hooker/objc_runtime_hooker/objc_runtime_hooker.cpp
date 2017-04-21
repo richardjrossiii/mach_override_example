@@ -20,18 +20,34 @@
 // looking at the order of the 'link binary with libraries' phase.
 __attribute__((constructor))
 static void _hook_objc_runtime() {
-  kern_return_t err;
-  MACH_OVERRIDE(void, method_exchangeImplementations, (Method m1, Method m2), &err) {
-    printf("Exchanging implementations for method %s and %s.\n", sel_getName(method_getName(m1)), sel_getName(method_getName(m2)));
+    kern_return_t err;
+    MACH_OVERRIDE(void, method_exchangeImplementations, (Method m1, Method m2), &err) {
+        printf("Exchanging implementations for method %s and %s.\n", sel_getName(method_getName(m1)), sel_getName(method_getName(m2)));
+        
+        method_exchangeImplementations_reenter(m1, m2);
+    }
+    END_MACH_OVERRIDE(method_exchangeImplementations);
+    
+    MACH_OVERRIDE(void, method_setImplementation, (Method method, IMP imp), &err) {
+        printf("Setting new implementation for method %s.\n", sel_getName(method_getName(method)));
+        
+        method_setImplementation_reenter(method, imp);
+    }
+    END_MACH_OVERRIDE(method_setImplementation);
+    
+    MACH_OVERRIDE(void, class_replaceMethod, (Class cls, SEL name, IMP imp, const char *types), &err) {
+        printf("Setting new implementation for method %s of class%s.\n", sel_getName(name), class_getName(cls));
+        
+        class_replaceMethod_reenter(cls, name, imp, types);
+    }
+    END_MACH_OVERRIDE(class_replaceMethod);
+    
+    MACH_OVERRIDE(void, class_addMethod, (Class cls, SEL name, IMP imp, const char *types), &err) {
+        printf("Adding new for method %s of class%s.\n", sel_getName(name), class_getName(cls));
+        
+        class_addMethod_reenter(cls, name, imp, types);
+    }
+    END_MACH_OVERRIDE(class_addMethod);
+    
 
-    method_exchangeImplementations_reenter(m1, m2);
-  }
-  END_MACH_OVERRIDE(method_exchangeImplementations);
-
-  MACH_OVERRIDE(void, method_setImplementation, (Method method, IMP imp), &err) {
-    printf("Setting new implementation for method %s.\n", sel_getName(method_getName(method)));
-
-    method_setImplementation_reenter(method, imp);
-  }
-  END_MACH_OVERRIDE(method_setImplementation);
 }
